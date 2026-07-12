@@ -22,6 +22,7 @@ if not os.path.exists(FILE_NAME):
         "睡眠スコア"
     ])
     df.to_csv(FILE_NAME, index=False)
+
 st.title("😴 Smart Sleep Robot 🤖")
 st.caption("日中の行動から今夜の睡眠を予測します")
 
@@ -70,6 +71,7 @@ if st.button("😴 睡眠スコアを計算",use_container_width=True):
     score -= (stress-1)*5
 
     score=max(0,min(score,100))
+    
     new_data = pd.DataFrame([{
     "日付": datetime.now().strftime("%Y-%m-%d %H:%M"),
     "歩数": steps,
@@ -135,6 +137,7 @@ history.to_csv(FILE_NAME, index=False)
     st.markdown(f"# {robot}")
 
     st.write(advice)
+
 st.markdown("---")
 st.subheader("📈 睡眠スコア履歴")
 
