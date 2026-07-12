@@ -8,7 +8,20 @@ st.set_page_config(
     page_icon="🤖",
     layout="centered"
 )
+FILE_NAME = "sleep_log.csv"
 
+if not os.path.exists(FILE_NAME):
+    df = pd.DataFrame(columns=[
+        "日付",
+        "歩数",
+        "運動時間",
+        "日光",
+        "カフェイン",
+        "スマホ",
+        "ストレス",
+        "睡眠スコア"
+    ])
+    df.to_csv(FILE_NAME, index=False)
 st.title("😴 Smart Sleep Robot 🤖")
 st.caption("日中の行動から今夜の睡眠を予測します")
 
@@ -57,7 +70,20 @@ if st.button("😴 睡眠スコアを計算",use_container_width=True):
     score -= (stress-1)*5
 
     score=max(0,min(score,100))
+new_data = pd.DataFrame([{
+    "日付": datetime.now().strftime("%Y-%m-%d %H:%M"),
+    "歩数": steps,
+    "運動時間": exercise,
+    "日光": sun,
+    "カフェイン": coffee,
+    "スマホ": phone,
+    "ストレス": stress,
+    "睡眠スコア": score
+}])
 
+history = pd.read_csv(FILE_NAME)
+history = pd.concat([history, new_data], ignore_index=True)
+history.to_csv(FILE_NAME, index=False)
     st.markdown("## 📊 結果")
 
     st.progress(score/100)
@@ -109,3 +135,12 @@ if st.button("😴 睡眠スコアを計算",use_container_width=True):
     st.markdown(f"# {robot}")
 
     st.write(advice)
+st.markdown("---")
+st.subheader("📈 睡眠スコア履歴")
+
+history = pd.read_csv(FILE_NAME)
+
+st.dataframe(history)
+
+if len(history) > 0:
+    st.line_chart(history["睡眠スコア"])
