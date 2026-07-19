@@ -196,7 +196,6 @@ if st.button("🤖 睡眠を分析する", use_container_width=True):
         for a in advice:
             st.write("・", a)
 
-　  # -----------------------------
     # データ保存
     # -----------------------------
     new_data = pd.DataFrame([{
